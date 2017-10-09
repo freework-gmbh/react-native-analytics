@@ -1,10 +1,10 @@
 {
-  "name": "react-native-analytics",
+  "name": "@freework/react-native-analytics",
   "version": "0.1.2",
   "description": "The Ananlytics API you've always wanted. Now for React Native. Powered by Segment.",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tonyxiao/react-native-analytics.git"
+    "url": "git@github.com:freework-gmbh/react-native-analytics.git"
   },
   "keywords": [
     "react-native",
@@ -30,7 +30,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tonyxiao/react-native-analytics/issues"
+    "url": "https://github.com/freework-gmbh/react-native-analytics/issues"
   },
   "maintainers": [
     {
@@ -42,7 +42,7 @@
       "email": "tonyx.ca@gmail.com"
     }
   ],
-  "homepage": "https://github.com/tonyxiao/react-native-analytics",
+  "homepage": "https://github.com/freework-gmbh/react-native-analytics",
   "peerDependencies": {
     "react-native": ">=0.7.0"
   }
