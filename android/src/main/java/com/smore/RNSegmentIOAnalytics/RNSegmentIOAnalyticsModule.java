@@ -14,6 +14,7 @@ import com.segment.analytics.Traits;
 import com.segment.analytics.Options;
 import android.util.Log;
 import android.content.Context;
+import com.segment.analytics.android.integrations.amplitude.AmplitudeIntegration;
 
 public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
   private static Analytics mAnalytics = null;
@@ -48,7 +49,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         builder.logLevel(Analytics.LogLevel.DEBUG);
       }
 
-      mAnalytics = builder.build();
+      mAnalytics = builder.use(AmplitudeIntegration.FACTORY).build();
     } else {
       log("Segment Analytics already initialized. Refusing to re-initialize.");
     }

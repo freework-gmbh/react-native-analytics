@@ -9,6 +9,7 @@
 #import <RCTConvert.h>
 #import <SEGAnalytics.h>
 #import "RNSegmentIOAnalytics.h"
+#import <Segment-Amplitude/SEGAmplitudeIntegrationFactory.h>
 
 @implementation RNSegmentIOAnalytics
 
@@ -17,6 +18,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(setup:(NSString*)configKey :(NSUInteger)flushAt :(BOOL)shouldUseLocationServices)
 {
     SEGAnalyticsConfiguration *configuration = [SEGAnalyticsConfiguration configurationWithWriteKey:configKey];
+    [configuration use:[SEGAmplitudeIntegrationFactory instance]];
     configuration.flushAt = flushAt;
     configuration.shouldUseLocationServices = shouldUseLocationServices;
     [SEGAnalytics setupWithConfiguration:configuration];
