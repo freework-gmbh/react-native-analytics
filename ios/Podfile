@@ -9,6 +9,6 @@ target 'RNSegmentIOAnalytics' do
     'RCTNetwork',
     'RCTWebSocket',
   ]
-  pod 'Analytics', '~> 3.2'
-  pod 'Segment-Amplitude', '1.4.2'
+  pod 'Analytics'
+  pod 'Segment-Amplitude'
 end
