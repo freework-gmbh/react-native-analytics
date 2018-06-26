@@ -1,6 +1,6 @@
 {
   "name": "@freework/react-native-analytics",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "The Ananlytics API you've always wanted. Now for React Native. Powered by Segment.",
   "repository": {
     "type": "git",
