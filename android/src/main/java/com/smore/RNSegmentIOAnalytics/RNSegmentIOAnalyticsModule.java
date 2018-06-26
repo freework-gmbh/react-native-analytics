@@ -1,11 +1,11 @@
 package com.smore.RNSegmentIOAnalytics;
-import android.support.annotation.Nullable;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.segment.analytics.ValueMap;
+import com.facebook.react.bridge.ReadableNativeMap;
 
 import com.facebook.react.bridge.ReadableType;
 import com.segment.analytics.Analytics;
@@ -60,7 +60,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#identify
    */
   @ReactMethod
-  public void identify(String userId, @Nullable ReadableMap traits) {
+  public void identify(String userId, ReadableMap traits) {
     if (!mEnabled) {
       return;
     }
@@ -71,7 +71,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#track
    */
   @ReactMethod
-  public void track(String trackText, @Nullable ReadableMap properties) {
+  public void track(String trackText, ReadableMap properties) {
     if (!mEnabled) {
       return;
     }
@@ -82,7 +82,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#screen
    */
   @ReactMethod
-  public void screen(String screenName, @Nullable ReadableMap properties) {
+  public void screen(String screenName, ReadableMap properties) {
     if (!mEnabled) {
       return;
     }
@@ -135,16 +135,11 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
     mEnabled = true;
   }
 
- private Properties toProperties (ReadableMap map) {
-    Properties props = new Properties();
-    addToValueMap(map, props);
-    return props;
-  }
-
-  private void addToValueMap(ReadableMap map, ValueMap valueMap) {
+  private Properties toProperties (ReadableMap map) {
     if (map == null) {
-      return;
+      return new Properties();
     }
+    Properties props = new Properties();
 
     ReadableMapKeySetIterator iterator = map.keySetIterator();
     while (iterator.hasNextKey()) {
@@ -152,33 +147,71 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
       ReadableType type = map.getType(key);
       switch (type){
         case Array:
-          valueMap.putValue(key, map.getArray(key));
+          props.putValue(key, map.getArray(key));
           break;
         case Boolean:
-          valueMap.putValue(key, map.getBoolean(key));
+          props.putValue(key, map.getBoolean(key));
+          break;
+        case ReadableNativeMap:
+          props.putValue(key, map.getMap(key));
           break;
         case Map:
-          valueMap.putValue(key, map.getMap(key));
+          props.putValue(key, map.getMap(key));
           break;
         case Null:
-          valueMap.putValue(key, null);
+          props.putValue(key, null);
           break;
         case Number:
-          valueMap.putValue(key, map.getDouble(key));
+          props.putValue(key, map.getDouble(key));
           break;
         case String:
-          valueMap.putValue(key, map.getString(key));
+          props.putValue(key, map.getString(key));
           break;
         default:
           log("Unknown type:" + type.name());
           break;
       }
     }
+    return props;
   }
 
   private Traits toTraits (ReadableMap map) {
+    if (map == null) {
+      return new Traits();
+    }
     Traits traits = new Traits();
-    addToValueMap(map, traits);
+
+    ReadableMapKeySetIterator iterator = map.keySetIterator();
+    while (iterator.hasNextKey()) {
+      String key = iterator.nextKey();
+      ReadableType type = map.getType(key);
+      switch (type){
+        case Array:
+          traits.putValue(key, map.getArray(key));
+          break;
+        case Boolean:
+          traits.putValue(key, map.getBoolean(key));
+          break;
+        case ReadableNativeMap:
+          traits.putValue(key, map.getMap(key));
+          break;
+        case Map:
+          traits.putValue(key, map.getMap(key));
+          break;
+        case Null:
+          traits.putValue(key, null);
+          break;
+        case Number:
+          traits.putValue(key, map.getDouble(key));
+          break;
+        case String:
+          traits.putValue(key, map.getString(key));
+          break;
+        default:
+          log("Unknown type:" + type.name());
+          break;
+      }
+    }
     return traits;
   }
 
