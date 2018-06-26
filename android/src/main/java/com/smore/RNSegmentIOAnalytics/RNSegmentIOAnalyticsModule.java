@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.NativeMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
 import com.facebook.react.bridge.ReadableType;
