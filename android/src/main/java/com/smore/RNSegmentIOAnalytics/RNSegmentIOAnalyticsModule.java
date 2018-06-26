@@ -154,6 +154,9 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         case Map:
           props.putValue(key, map.getMap(key));
           break;
+        case NativeMap:
+          props.putValue(key, map.getMap(key));
+          break;
         case Null:
           props.putValue(key, null);
           break;
@@ -189,6 +192,9 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           traits.putValue(key, map.getBoolean(key));
           break;
         case Map:
+          traits.putValue(key, map.getMap(key));
+          break;
+        case NativeMap:
           traits.putValue(key, map.getMap(key));
           break;
         case Null:
