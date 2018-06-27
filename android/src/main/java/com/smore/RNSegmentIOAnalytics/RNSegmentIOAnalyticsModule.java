@@ -159,7 +159,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           } else if (value instanceof  Double) {
               map.putDouble(key, (Double) value);
           } else if (value == null)  {
-              map.put(key, null);
+              map.putNull(key);
           } else if (value instanceof String)  {
               map.putString(key, (String) value);
           } else {
@@ -186,7 +186,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           } else if (value instanceof  Double) {
               array.pushDouble((Double) value);
           } else if (value == null)  {
-              array.push(null);
+              array.pushNull();
           } else if (value instanceof String)  {
               array.pushString((String) value);
 
@@ -223,7 +223,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         } else if (value instanceof String)  {
           props.putValue(key, (String) value);
         } else {
-          props.putString(key, value.toString());
+          props.putValue(key, value.toString());
         }
     }
     return props;
@@ -255,7 +255,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         } else if (value instanceof String)  {
           traits.putValue(key, (String) value);
         } else {
-          traits.putString(key, value.toString());
+          traits.putValue(key, value.toString());
         }
     }
     return traits;
