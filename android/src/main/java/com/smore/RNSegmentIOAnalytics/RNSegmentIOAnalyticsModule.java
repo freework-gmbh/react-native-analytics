@@ -135,82 +135,107 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
     mEnabled = true;
   }
 
-  private Properties toProperties (ReadableMap map) {
-    if (map == null) {
+
+  private WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
+      WritableMap map = new WritableNativeMap();
+
+      Iterator<String> iterator = jsonObject.keys();
+      while (iterator.hasNext()) {
+          String key = iterator.next();
+          Object value = jsonObject.get(key);
+          if (value instanceof JSONObject) {
+              map.putMap(key, convertJsonToMap((JSONObject) value));
+          } else if (value instanceof  JSONArray) {
+              map.putArray(key, convertJsonToArray((JSONArray) value));
+          } else if (value instanceof  Boolean) {
+              map.putBoolean(key, (Boolean) value);
+          } else if (value instanceof  Integer) {
+              map.putInt(key, (Integer) value);
+          } else if (value instanceof  Double) {
+              map.putDouble(key, (Double) value);
+          } else if (value instanceof String)  {
+              map.putString(key, (String) value);
+          } else {
+              map.putString(key, value.toString());
+          }
+      }
+      return map;
+  }
+
+  private Properties toProperties (JSONObject jsonObject) throws JSONException {
+    if (jsonObject == null) {
       return new Properties();
     }
     Properties props = new Properties();
 
-    ReadableMapKeySetIterator iterator = map.keySetIterator();
-    while (iterator.hasNextKey()) {
-      String key = iterator.nextKey();
-      ReadableType type = map.getType(key);
-      switch (type){
-        case Array:
-          props.putValue(key, map.getArray(key));
+    Iterator<String> iterator = jsonObject.keys();
+    while (iterator.hasNext()) {
+        String key = iterator.next();
+        Object value = jsonObject.get(key);
+
+        if (value instanceof JSONObject) {
+          props.putValue(key, convertJsonToMap((JSONObject) value));
           break;
-        case Boolean:
-          props.putValue(key, map.getBoolean(key));
+        } else if (value instanceof  JSONArray) {
+          props.putValue(key, convertJsonToArray((JSONArray) value));
           break;
-        case ReadableNativeMap:
-          props.putValue(key, map.getMap(key));
+        } else if (value instanceof  Boolean) {
+          props.putValue(key, (Boolean) value);
           break;
-        case Map:
-          props.putValue(key, map.getMap(key));
+        } else if (value instanceof  Integer) {
+          props.putValue(key, (Integer) value);
           break;
-        case Null:
+        } else if (value instanceof  Double) {
+          props.putValue(key, (Double) value);
+          break;
+        } else if (value instanceof Null)  {
           props.putValue(key, null);
           break;
-        case Number:
-          props.putValue(key, map.getDouble(key));
+        } else if (value instanceof String)  {
+          props.putValue(key, (String) value);
           break;
-        case String:
-          props.putValue(key, map.getString(key));
-          break;
-        default:
-          log("Unknown type:" + type.name());
-          break;
-      }
+        } else {
+            map.putString(key, value.toString());
+        }
     }
     return props;
   }
 
-  private Traits toTraits (ReadableMap map) {
-    if (map == null) {
+  private Traits toTraits (JSONObject jsonObject) throws JSONException {
+    if (jsonObject == null) {
       return new Traits();
     }
     Traits traits = new Traits();
 
-    ReadableMapKeySetIterator iterator = map.keySetIterator();
-    while (iterator.hasNextKey()) {
-      String key = iterator.nextKey();
-      ReadableType type = map.getType(key);
-      switch (type){
-        case Array:
-          traits.putValue(key, map.getArray(key));
+    Iterator<String> iterator = jsonObject.keys();
+    while (iterator.hasNext()) {
+        String key = iterator.next();
+        Object value = jsonObject.get(key);
+
+        if (value instanceof JSONObject) {
+          traits.putValue(key, convertJsonToMap((JSONObject) value));
           break;
-        case Boolean:
-          traits.putValue(key, map.getBoolean(key));
+        } else if (value instanceof  JSONArray) {
+          traits.putValue(key, convertJsonToArray((JSONArray) value));
           break;
-        case ReadableNativeMap:
-          traits.putValue(key, map.getMap(key));
+        } else if (value instanceof  Boolean) {
+          traits.putValue(key, (Boolean) value);
           break;
-        case Map:
-          traits.putValue(key, map.getMap(key));
+        } else if (value instanceof  Integer) {
+          traits.putValue(key, (Integer) value);
           break;
-        case Null:
+        } else if (value instanceof  Double) {
+          traits.putValue(key, (Double) value);
+          break;
+        } else if (value instanceof Null)  {
           traits.putValue(key, null);
           break;
-        case Number:
-          traits.putValue(key, map.getDouble(key));
+        } else if (value instanceof String)  {
+          traits.putValue(key, (String) value);
           break;
-        case String:
-          traits.putValue(key, map.getString(key));
-          break;
-        default:
-          log("Unknown type:" + type.name());
-          break;
-      }
+        } else {
+            map.putString(key, value.toString());
+        }
     }
     return traits;
   }
