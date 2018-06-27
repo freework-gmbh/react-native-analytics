@@ -181,7 +181,6 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
     while (iterator.hasNextKey()) {
       String key = iterator.nextKey();
       ReadableType type = map.getType(key);
-      log("Type: " + type.name());
       switch (type){
         case Array:
           traits.putValue(key, map.getArray(key));
@@ -190,8 +189,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           traits.putValue(key, map.getBoolean(key));
           break;
         case Map:
-          log("MAP:----- " + type.name());
-          traits.putValue(key, map.getMap(key).toHashMap());
+          traits.putValue(key, map.getMap(key));
           break;
         case Null:
           traits.putValue(key, null);
