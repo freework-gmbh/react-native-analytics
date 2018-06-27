@@ -1,17 +1,11 @@
 package com.smore.RNSegmentIOAnalytics;
 
-import org.json.*;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.ReadableNativeMap;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableNativeArray;
-import java.util.Iterator;
+
 import com.facebook.react.bridge.ReadableType;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Analytics.Builder;
@@ -65,7 +59,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#identify
    */
   @ReactMethod
-  public void identify(String userId, JSONObject traits) throws JSONException {
+  public void identify(String userId, ReadableMap traits) {
     if (!mEnabled) {
       return;
     }
@@ -76,7 +70,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#track
    */
   @ReactMethod
-  public void track(String trackText, JSONObject properties) throws JSONException {
+  public void track(String trackText, ReadableMap properties) {
     if (!mEnabled) {
       return;
     }
@@ -87,7 +81,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#screen
    */
   @ReactMethod
-  public void screen(String screenName, JSONObject properties) throws JSONException {
+  public void screen(String screenName, ReadableMap properties) {
     if (!mEnabled) {
       return;
     }
@@ -140,122 +134,76 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
     mEnabled = true;
   }
 
-
-  private WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
-      WritableMap map = new WritableNativeMap();
-
-      Iterator<String> iterator = jsonObject.keys();
-      while (iterator.hasNext()) {
-          String key = iterator.next();
-          Object value = jsonObject.get(key);
-          if (value instanceof JSONObject) {
-              map.putMap(key, convertJsonToMap((JSONObject) value));
-          } else if (value instanceof  JSONArray) {
-              map.putArray(key, convertJsonToArray((JSONArray) value));
-          } else if (value instanceof  Boolean) {
-              map.putBoolean(key, (Boolean) value);
-          } else if (value instanceof  Integer) {
-              map.putInt(key, (Integer) value);
-          } else if (value instanceof  Double) {
-              map.putDouble(key, (Double) value);
-          } else if (value == null)  {
-              map.putNull(key);
-          } else if (value instanceof String)  {
-              map.putString(key, (String) value);
-          } else {
-            log("Unknown type");
-          }
-      }
-      return map;
-  }
-
-
-  private WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
-      WritableArray array = new WritableNativeArray();
-
-      for (int i = 0; i < jsonArray.length(); i++) {
-          Object value = jsonArray.get(i);
-          if (value instanceof JSONObject) {
-              array.pushMap(convertJsonToMap((JSONObject) value));
-          } else if (value instanceof  JSONArray) {
-              array.pushArray(convertJsonToArray((JSONArray) value));
-          } else if (value instanceof  Boolean) {
-              array.pushBoolean((Boolean) value);
-          } else if (value instanceof  Integer) {
-              array.pushInt((Integer) value);
-          } else if (value instanceof  Double) {
-              array.pushDouble((Double) value);
-          } else if (value == null)  {
-              array.pushNull();
-          } else if (value instanceof String)  {
-              array.pushString((String) value);
-          } else {
-            log("Unknown type");
-          }
-      }
-      return array;
-  }
-
-  private Properties toProperties (JSONObject jsonObject) throws JSONException {
-    if (jsonObject == null) {
+  private Properties toProperties (ReadableMap map) {
+    if (map == null) {
       return new Properties();
     }
     Properties props = new Properties();
 
-    Iterator<String> iterator = jsonObject.keys();
-    while (iterator.hasNext()) {
-        String key = iterator.next();
-        Object value = jsonObject.get(key);
-
-        if (value instanceof JSONObject) {
-          props.putValue(key, convertJsonToMap((JSONObject) value));
-        } else if (value instanceof  JSONArray) {
-          props.putValue(key, convertJsonToArray((JSONArray) value));
-        } else if (value instanceof  Boolean) {
-          props.putValue(key, (Boolean) value);
-        } else if (value instanceof  Integer) {
-          props.putValue(key, (Integer) value);
-        } else if (value instanceof  Double) {
-          props.putValue(key, (Double) value);
-        } else if (value == null)  {
+    ReadableMapKeySetIterator iterator = map.keySetIterator();
+    while (iterator.hasNextKey()) {
+      String key = iterator.nextKey();
+      ReadableType type = map.getType(key);
+      switch (type){
+        case Array:
+          props.putValue(key, map.getArray(key));
+          break;
+        case Boolean:
+          props.putValue(key, map.getBoolean(key));
+          break;
+        case Map:
+          props.putValue(key, map.getMap(key));
+          break;
+        case Null:
           props.putValue(key, null);
-        } else if (value instanceof String)  {
-          props.putValue(key, (String) value);
-        } else {
-          log("Unknown type");
-        }
+          break;
+        case Number:
+          props.putValue(key, map.getDouble(key));
+          break;
+        case String:
+          props.putValue(key, map.getString(key));
+          break;
+        default:
+          log("Unknown type:" + type.name());
+          break;
+      }
     }
     return props;
   }
 
-  private Traits toTraits (JSONObject jsonObject) throws JSONException {
-    if (jsonObject == null) {
+  private Traits toTraits (ReadableMap map) {
+    if (map == null) {
       return new Traits();
     }
     Traits traits = new Traits();
 
-    Iterator<String> iterator = jsonObject.keys();
-    while (iterator.hasNext()) {
-        String key = iterator.next();
-        Object value = jsonObject.get(key);
-
-        if (value instanceof JSONObject) {
-          traits.putValue(key, convertJsonToMap((JSONObject) value));
-        } else if (value instanceof  JSONArray) {
-          traits.putValue(key, convertJsonToArray((JSONArray) value));
-        } else if (value instanceof  Boolean) {
-          traits.putValue(key, (Boolean) value);
-        } else if (value instanceof  Integer) {
-          traits.putValue(key, (Integer) value);
-        } else if (value instanceof  Double) {
-          traits.putValue(key, (Double) value);
-        } else if (value == null)  {
+    ReadableMapKeySetIterator iterator = map.keySetIterator();
+    while (iterator.hasNextKey()) {
+      String key = iterator.nextKey();
+      ReadableType type = map.getType(key);
+      switch (type){
+        case Array:
+          traits.putValue(key, map.getArray(key));
+          break;
+        case Boolean:
+          traits.putValue(key, map.getBoolean(key));
+          break;
+        case Map:
+          traits.putValue(key, map.getMap(key));
+          break;
+        case Null:
           traits.putValue(key, null);
-        } else if (value instanceof String)  {
-          traits.putValue(key, (String) value);
-        } else {
-          log("Unknown type");
-        }
+          break;
+        case Number:
+          traits.putValue(key, map.getDouble(key));
+          break;
+        case String:
+          traits.putValue(key, map.getString(key));
+          break;
+        default:
+          log("Unknown type:" + type.name());
+          break;
+      }
     }
     return traits;
   }
