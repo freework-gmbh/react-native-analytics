@@ -1,11 +1,16 @@
 package com.smore.RNSegmentIOAnalytics;
 
+import org.json.*;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableNativeMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableNativeArray;
 
 import com.facebook.react.bridge.ReadableType;
 import com.segment.analytics.Analytics;
@@ -153,6 +158,8 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
               map.putInt(key, (Integer) value);
           } else if (value instanceof  Double) {
               map.putDouble(key, (Double) value);
+          } else if (value == null)  {
+              map.putValue(key, null);
           } else if (value instanceof String)  {
               map.putString(key, (String) value);
           } else {
@@ -175,27 +182,20 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
 
         if (value instanceof JSONObject) {
           props.putValue(key, convertJsonToMap((JSONObject) value));
-          break;
         } else if (value instanceof  JSONArray) {
           props.putValue(key, convertJsonToArray((JSONArray) value));
-          break;
         } else if (value instanceof  Boolean) {
           props.putValue(key, (Boolean) value);
-          break;
         } else if (value instanceof  Integer) {
           props.putValue(key, (Integer) value);
-          break;
         } else if (value instanceof  Double) {
           props.putValue(key, (Double) value);
-          break;
-        } else if (value instanceof Null)  {
+        } else if (value == null)  {
           props.putValue(key, null);
-          break;
         } else if (value instanceof String)  {
           props.putValue(key, (String) value);
-          break;
         } else {
-            map.putString(key, value.toString());
+          map.putString(key, value.toString());
         }
     }
     return props;
@@ -214,27 +214,20 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
 
         if (value instanceof JSONObject) {
           traits.putValue(key, convertJsonToMap((JSONObject) value));
-          break;
         } else if (value instanceof  JSONArray) {
           traits.putValue(key, convertJsonToArray((JSONArray) value));
-          break;
         } else if (value instanceof  Boolean) {
           traits.putValue(key, (Boolean) value);
-          break;
         } else if (value instanceof  Integer) {
           traits.putValue(key, (Integer) value);
-          break;
         } else if (value instanceof  Double) {
           traits.putValue(key, (Double) value);
-          break;
-        } else if (value instanceof Null)  {
+        } else if (value == null)  {
           traits.putValue(key, null);
-          break;
         } else if (value instanceof String)  {
           traits.putValue(key, (String) value);
-          break;
         } else {
-            map.putString(key, value.toString());
+          map.putString(key, value.toString());
         }
     }
     return traits;
