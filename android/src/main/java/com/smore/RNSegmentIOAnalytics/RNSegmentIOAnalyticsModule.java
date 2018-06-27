@@ -65,7 +65,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#identify
    */
   @ReactMethod
-  public void identify(String userId, JSONObject traits) {
+  public void identify(String userId, JSONObject traits) throws JSONException {
     if (!mEnabled) {
       return;
     }
@@ -76,7 +76,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#track
    */
   @ReactMethod
-  public void track(String trackText, JSONObject properties) {
+  public void track(String trackText, JSONObject properties) throws JSONException {
     if (!mEnabled) {
       return;
     }
@@ -87,7 +87,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#screen
    */
   @ReactMethod
-  public void screen(String screenName, JSONObject properties) {
+  public void screen(String screenName, JSONObject properties) throws JSONException {
     if (!mEnabled) {
       return;
     }
@@ -163,7 +163,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           } else if (value instanceof String)  {
               map.putString(key, (String) value);
           } else {
-              map.putString(key, value.toString());
+            log("Unknown type");
           }
       }
       return map;
@@ -189,9 +189,8 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
               array.pushNull();
           } else if (value instanceof String)  {
               array.pushString((String) value);
-
           } else {
-              array.pushString(value.toString());
+            log("Unknown type");
           }
       }
       return array;
@@ -223,7 +222,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         } else if (value instanceof String)  {
           props.putValue(key, (String) value);
         } else {
-          props.putValue(key, value.toString());
+          log("Unknown type");
         }
     }
     return props;
@@ -255,7 +254,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         } else if (value instanceof String)  {
           traits.putValue(key, (String) value);
         } else {
-          traits.putValue(key, value.toString());
+          log("Unknown type");
         }
     }
     return traits;
