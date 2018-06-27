@@ -11,7 +11,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
-
+import java.util.Iterator;
 import com.facebook.react.bridge.ReadableType;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Analytics.Builder;
@@ -65,7 +65,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#identify
    */
   @ReactMethod
-  public void identify(String userId, ReadableMap traits) {
+  public void identify(String userId, JSONObject traits) {
     if (!mEnabled) {
       return;
     }
@@ -76,7 +76,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#track
    */
   @ReactMethod
-  public void track(String trackText, ReadableMap properties) {
+  public void track(String trackText, JSONObject properties) {
     if (!mEnabled) {
       return;
     }
@@ -87,7 +87,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#screen
    */
   @ReactMethod
-  public void screen(String screenName, ReadableMap properties) {
+  public void screen(String screenName, JSONObject properties) {
     if (!mEnabled) {
       return;
     }
@@ -159,7 +159,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           } else if (value instanceof  Double) {
               map.putDouble(key, (Double) value);
           } else if (value == null)  {
-              map.putValue(key, null);
+              map.put(key, null);
           } else if (value instanceof String)  {
               map.putString(key, (String) value);
           } else {
@@ -167,6 +167,34 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           }
       }
       return map;
+  }
+
+
+  private WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
+      WritableArray array = new WritableNativeArray();
+
+      for (int i = 0; i < jsonArray.length(); i++) {
+          Object value = jsonArray.get(i);
+          if (value instanceof JSONObject) {
+              array.pushMap(convertJsonToMap((JSONObject) value));
+          } else if (value instanceof  JSONArray) {
+              array.pushArray(convertJsonToArray((JSONArray) value));
+          } else if (value instanceof  Boolean) {
+              array.pushBoolean((Boolean) value);
+          } else if (value instanceof  Integer) {
+              array.pushInt((Integer) value);
+          } else if (value instanceof  Double) {
+              array.pushDouble((Double) value);
+          } else if (value == null)  {
+              array.push(null);
+          } else if (value instanceof String)  {
+              array.pushString((String) value);
+
+          } else {
+              array.pushString(value.toString());
+          }
+      }
+      return array;
   }
 
   private Properties toProperties (JSONObject jsonObject) throws JSONException {
