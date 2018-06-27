@@ -191,7 +191,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
           break;
         case Map:
           log("MAP:----- " + type.name());
-          traits.putValue(key, map.getMap(key));
+          traits.putValue(key, map.getMap(key).toHashMap());
           break;
         case Null:
           traits.putValue(key, null);
