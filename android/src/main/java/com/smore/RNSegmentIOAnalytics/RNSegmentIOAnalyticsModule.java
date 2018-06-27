@@ -195,7 +195,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         } else if (value instanceof String)  {
           props.putValue(key, (String) value);
         } else {
-          map.putString(key, value.toString());
+          props.putString(key, value.toString());
         }
     }
     return props;
@@ -227,7 +227,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         } else if (value instanceof String)  {
           traits.putValue(key, (String) value);
         } else {
-          map.putString(key, value.toString());
+          traits.putString(key, value.toString());
         }
     }
     return traits;
