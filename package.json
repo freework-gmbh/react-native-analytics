@@ -44,6 +44,6 @@
   ],
   "homepage": "https://github.com/freework-gmbh/react-native-analytics",
   "peerDependencies": {
-    "react-native": ">=0.7.0"
+    "react-native": ">=0.40.0"
   }
 }

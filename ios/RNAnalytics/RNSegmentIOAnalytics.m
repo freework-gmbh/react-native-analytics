@@ -6,8 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <RCTConvert.h>
-#import <SEGAnalytics.h>
+#import <React/RCTConvert.h>
+#import "SEGAnalytics.h"
 #import "RNSegmentIOAnalytics.h"
 #import <Segment-Amplitude/SEGAmplitudeIntegrationFactory.h>
 
@@ -29,6 +29,13 @@ RCT_EXPORT_METHOD(setup:(NSString*)configKey :(NSUInteger)flushAt :(BOOL)shouldU
  */
 RCT_EXPORT_METHOD(identify:(NSString*)userId traits:(NSDictionary *)traits) {
     [[SEGAnalytics sharedAnalytics] identify:userId traits:traits];
+}
+
+/*
+ https://segment.com/docs/libraries/ios/#alias
+ */
+RCT_EXPORT_METHOD(alias:(NSString*)userId) {
+    [[SEGAnalytics sharedAnalytics] alias:userId];
 }
 
 /*
